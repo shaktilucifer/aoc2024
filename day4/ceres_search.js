@@ -24,36 +24,23 @@ function _getValueFromPosition(grid, position) {
 }
 
 function makeKey(position) {
-    return `${position[0]}_${position[1]}`;
-  }
+  return `${position[0]}_${position[1]}`;
+}
 
 function check(grid, position, direction) {
   let i = 1;
   let wordPositionList = [makeKey(position)];
   while (i < XWORD.length) {
     const new_pos = movePosition(position, direction);
-    // console.log({t: XWORD.charAt(i), me: _getValueFromPosition(grid, new_pos), new_pos})
     if (XWORD.charAt(i) === _getValueFromPosition(grid, new_pos)) {
       wordPositionList.push(makeKey(new_pos));
       position = new_pos;
     } else {
-        return [];
+      return [];
     }
     i++;
   }
   return wordPositionList;
-}
-
-// print grid
-function pG(grid) {
-  let str = "";
-  for (let i = 0; i < grid.length; i++) {
-    for (let j = 0; j < grid[0].length; j++) {
-      str += grid[i][j];
-    }
-    str += "\n";
-  }
-  console.log(str);
 }
 
 function getGrid(data) {
@@ -64,11 +51,11 @@ function getGrid(data) {
   return grid;
 }
 
-function getXPositions(grid) {
+function getXPositions(grid, character) {
   let positions = [];
   for (let i = 0; i < grid.length; i++) {
     for (let j = 0; j < grid[0].length; j++) {
-      if (grid[i][j] === "X") {
+      if (grid[i][j] === character) {
         positions.push([i, j]);
       }
     }
@@ -83,8 +70,7 @@ const rows = data.split("\n");
 
 const grid = getGrid(rows);
 
-xPositions = getXPositions(grid);
-console.log({xPositions: xPositions.length})
+xPositions = getXPositions(grid, "X");
 const finalPositions = [];
 
 for (let i = 0; i < xPositions.length; i++) {
@@ -97,5 +83,44 @@ for (let i = 0; i < xPositions.length; i++) {
   finalPositions.push(check(grid, xPositions[i], DIR.UP_RIGHT));
   finalPositions.push(check(grid, xPositions[i], DIR.UP_LEFT));
 }
+// part 1
+console.log({ finalPositions: finalPositions.filter((i) => i.length).length });
 
-console.log({finalPositions: finalPositions.filter(i => i.length).length});
+// part 2
+
+function check2(grid, position) {
+  const upLeft = _getValueFromPosition(
+    grid,
+    movePosition(position, DIR.UP_LEFT)
+  );
+  const upRight = _getValueFromPosition(
+    grid,
+    movePosition(position, DIR.UP_RIGHT)
+  );
+  const downLeft = _getValueFromPosition(
+    grid,
+    movePosition(position, DIR.DOWN_LEFT)
+  );
+  const downRight = _getValueFromPosition(
+    grid,
+    movePosition(position, DIR.DOWN_RIGHT)
+  );
+
+  return (
+    (downLeft == "M" && downRight == "M" && upRight == "S" && upLeft == "S") ||
+    (downLeft == "S" && downRight == "S" && upRight == "M" && upLeft == "M") ||
+    (downLeft == "S" && downRight == "M" && upRight == "M" && upLeft == "S") ||
+    (downLeft == "M" && downRight == "S" && upRight == "S" && upLeft == "M")
+  );
+}
+
+const aPositions = getXPositions(grid, "A");
+
+let count = 0;
+for (let i = 0; i < aPositions.length; i++) {
+  if (check2(grid, aPositions[i])) {
+    count = count + 1;
+  }
+}
+
+console.log({ count });
