@@ -1,5 +1,5 @@
 const fs = require("fs");
-const DEBUG_ENABLED = true;
+const DEBUG_ENABLED = false;
 
 function debug(someObj) {
   if (DEBUG_ENABLED) console.log(someObj);
@@ -14,7 +14,7 @@ function pG(grid) {
     }
     str += "\n";
   }
-  debug(str);
+  console.log(str);
 }
 
 function getGrid(data) {
