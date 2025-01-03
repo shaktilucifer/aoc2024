@@ -3,7 +3,6 @@ const fs = require("fs");
 const data = fs.readFileSync("aoc25.ip", { encoding: "utf-8" });
 
 const ipList = data.split("\r\n\r\n");
-console.log({ ipList });
 
 function buildGrid(gridStr) {
   let grid = gridStr.split("\r\n");
@@ -18,7 +17,6 @@ function printGrid(grid) {
     }
     str += "\n";
   }
-  console.log(str);
 }
 
 const grids = [];
@@ -29,10 +27,7 @@ ipList.forEach((data) => {
 const locks = [];
 const keys = [];
 grids.forEach((grid) => {
-  const gridLen = grid.length;
-  console.log();
   const isKey = grid[0].find((data) => data !== "#");
-  console.log("groovy", findGrooveValues(grid));
 
   if (!isKey) {
     locks.push(findGrooveValues(grid));
@@ -41,7 +36,6 @@ grids.forEach((grid) => {
   }
 });
 
-console.log(locks.length, keys.length);
 
 function findGrooveValues(grid) {
   const arr = [];
@@ -69,7 +63,6 @@ function doesKeyFit(lock, key) {
 let numUniqueCombos = 0;
 locks.forEach((lock) => {
   keys.forEach((key, index) => {
-    console.log(index, doesKeyFit(lock, key));
     if (doesKeyFit(lock, key)) {
       numUniqueCombos++;
     }
